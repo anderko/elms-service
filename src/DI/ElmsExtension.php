@@ -9,6 +9,7 @@ class ElmsExtension extends CompilerExtension
 {
 	public $defaults = [
 		'orderSourceCode' => '',
+		'debugMode' => false,
 	];
 
 
@@ -20,6 +21,6 @@ class ElmsExtension extends CompilerExtension
 
 		$builder = $this->getContainerBuilder();
 		$builder->addDefinition($this->prefix('elmsService'))
-			->setClass('PremekKoch\Elms\ElmsService', [$config['orderSourceCode']]);
+			->setClass('PremekKoch\Elms\ElmsService', [$config['orderSourceCode'], $config['debugMode']]);
 	}
 }

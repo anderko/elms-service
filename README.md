@@ -1,7 +1,7 @@
 PremekKoch\ElmsService
 =========================
 
-Elms Servis API communication service. It serves to create an order for sending the stored goods to the end customer.
+ELMS Servis API communication service. It serves to create an order for sending the stored goods to the end customer.
 
 Instalation
 -----------
@@ -18,11 +18,12 @@ extensions:
 	elms: PremekKoch\Elms\ElmsExtension
 ```
 
-### 2. Set-up "orderSourceCode" in extension configuration in `config.neon`
+### 2. Set-up extension in `config.neon`
 
 ```
 elms:
-	orderSourceCode: 'yourClientCodeFromElmsServis'
+	orderSourceCode: 'yourClientCodeFromElmsServis' 
+	debugMode: false  # in debug mode no data are send
 ```
 
 How to use
@@ -37,41 +38,76 @@ How to use
 
 ### 2. Set a customer and order data
 
-minimum you must set is:
+Start with creating order and customer basic data:
 
 ```
 	:
-	$this->elmsService->customer->createCustomer('Přemek', 'Koch', 'Ulice', 'Město', '12345', ElmsCustomer::COUNTRY_CZE);
-	$this->elmsService->createOrder('ORD_123', 'INV_123', false, ElmsService::CURRENCY_CZK);
-	$this->elmsService->addProduct('plu', 1234.56, 1, 21);
-	$this->elmsService->addProduct('cpostrr', 55, 1, 21);
-	$this->elmsService->sendOrder();
+	$this->elmsService->createOrder('123', 'INV_123', false, ElmsService::CURRENCY_CZK);
+	$this->elmsService->addCustomer('Jan', 'Novák', 'Dlouhá 5', 'Dlouhá Lhota', '12345', ElmsService::COUNTRY_CZE);
 	:
 ```
 
-you can set another customer properties:
+You can set another customer properties:
  
 ```
 	:
-	$this->elmsService->customer->setCompany('Firma', '123456789', 'CZ123456789'); 
-	$this->elmsService->customer->setContact('premek.koch@gmail.com', '+420777888999');
-	$this->elmsService->customer->setDeliveryAddress('Jana', 'Nováková', 'Jiná ulice', 'Jiné město', '98765', ElmsCustomer::COUNTRY_SVK);
-	$this->elmsService->customer->setDeliveryCompany('Jiná firma');
-	$this->elmsService->customer->setDeliveryContact('novakova@jinafirma.sk', '+421333444555');
+	$this->elmsService->setCustomerCompany('Firma s.r.o.', '123456789', 'CZ123456789');
+	$this->elmsService->setCustomerContact('novak@firma.cz', '+420777666555');
 	:
 ```
 
-and you can more specify an order items:
+or even diferent delivery address. If delivery address is not set, shipping will be provided to customer`s address.
+
+```
+	:
+	$this->elmsService->setCustomerDeliveryAddress('Jana', 'Nováková', 'Krátká 8', 'Krátká Lhota', '54321', ElmsService::COUNTRY_SVK);
+	$this->elmsService->setCustomerDeliveryCompany('Jana Nováková OSVČ');
+	$this->elmsService->setCustomerDeliveryContact('novakova@novakova.sk', '+421777888999');
+	:
+```
+
+
+Next you must specify products to delivery. You can add more products, minimaly you must set one product and shipping:
+
+```
+	:
+	$this->elmsService->addProduct('Product PLU', 1234.56, 1, 21);
+	$this->elmsService->addProduct(ElmsService::DELIVERY_CPOSTRR, 55, 1, 21);
+	:	
+```
+
+Alternatively, you can set products in bulk:
+```
+	:
+	$this->elmsService->addProducts([
+		[
+			'plu' => 'Product PLU',
+		  'price' => 1234.56,
+		  'amount' => 1,
+		  'vat' => 21,
+		],
+		[
+		  'plu' => ElmsService::DELIVERY_CPOSTRR,
+		  'price' => 55,
+		  'amount' => 1,
+		  'vat' => 21,
+	  ],
+	]);
+	:
+```
+
+You can add special product items:
 
 ```
 	:
 	// Discount 100 CZK (value or ammount must be negative)
-  $this->elmsService->addDiscount(-100, 1, 21);
-  
-  // Rounding (-0.99 to +0.99)
+	$this->elmsService->addDiscount(-100, 1, 21);
+	:
+	// Rounding (-0.99 to +0.99)
 	$this->elmsService->addRounding(-0.56);
+	:
 ```
-**Remember: when you use CZK and cashOnDelivery, you must round an order to integers;** 
+**Remember:** when you use CZK and cashOnDelivery, you must round an order to integers. In order cases (EURs or not cashOnDelivery) use two decimals maximally. 
 
 
 ### 3. Send an order
@@ -80,8 +116,8 @@ and you can more specify an order items:
 	$this->elmsService->sendOrder();
 	:
 	catch (PremekKoch\Elms\ElmsException $exc){
-    // something goes wrong... 			
-  }
+		// something goes wrong... 			
+	}
 ```
-When send fails, API returns only brief error. Email with whole request and problems descriptions should arrive from ELMS Sevis soon.
+When send fails, API returns only brief error. Email with whole request and problems descriptions should arrive from ELMS Servis soon - they checks every failed request manually.
 
