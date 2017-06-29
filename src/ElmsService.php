@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace PremekKoch\Elms;
 
@@ -196,6 +196,19 @@ class ElmsService
 			'pcs' => $amount,
 			'tax' => $vat,
 		];
+	}
+
+
+	public function addProducts(array $products): void
+	{
+		foreach ($products as $product) {
+			$keys = array_keys($product);
+			if (!empty(array_diff(['plu', 'price', 'amount', 'vat'], $keys))) {
+				throw new ElmsException('Wrong product structure.');
+			}
+
+			$this->addProduct($product['plu'], $product['price'], $product['amount'], $product['vat']);
+		}
 	}
 
 
