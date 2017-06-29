@@ -1,6 +1,6 @@
 <?php
 
-namespace PremekKoch\Elms;
+namespace PremekKoch\Elms\DI;
 
 use Nette\DI\CompilerExtension;
 

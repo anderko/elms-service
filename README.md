@@ -15,7 +15,7 @@ Configuration
 ### 1. Register new extension in `config.neon`
 ```
 extensions:
-	elms: PremekKoch\Elms\ElmsExtension
+	elms: PremekKoch\Elms\DI\ElmsExtension
 ```
 
 ### 2. Set-up extension in `config.neon`

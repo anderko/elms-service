@@ -16,6 +16,6 @@
 	    "nette/robot-loader": "^2.4"
     },
 	"autoload": {
-		"psr-4": { "PremekKoch\\ElmsService\\": "src/" }
+		"psr-4": { "PremekKoch\\Elms\\": "src/" }
 	}
 }
