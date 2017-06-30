@@ -320,6 +320,8 @@ class ElmsService
 		if ($total !== $productSum) {
 			throw new ElmsException('Unexpected total value. Add rounding item.');
 		}
+
+		$this->total = $total;
 	}
 
 
