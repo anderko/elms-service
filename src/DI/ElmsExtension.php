@@ -13,7 +13,7 @@ class ElmsExtension extends CompilerExtension
 	];
 
 
-	public function loadConfiguration(): void
+	public function loadConfiguration()
 	{
 
 		$config = $this->config;
