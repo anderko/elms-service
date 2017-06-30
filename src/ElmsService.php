@@ -131,6 +131,13 @@ class ElmsService
 	private $deliveryEmail;
 
 
+	/**
+	 * ElmsService constructor.
+	 *
+	 * @param $orderSourceCode
+	 * @param $debugMode
+	 * @throws ElmsException
+	 */
 	public function __construct($orderSourceCode, $debugMode)
 	{
 		$this->source = $orderSourceCode;
@@ -145,7 +152,14 @@ class ElmsService
 	}
 
 
-	public function createOrder(string $orderNumber, string $invoiceNumber, bool $cashOnDelivery = false, int $currency = self::CURRENCY_CZK): void
+	/**
+	 * @param string $orderNumber
+	 * @param string $invoiceNumber
+	 * @param bool   $cashOnDelivery
+	 * @param int    $currency
+	 * @throws ElmsException
+	 */
+	public function createOrder(string $orderNumber, string $invoiceNumber, bool $cashOnDelivery = false, int $currency = self::CURRENCY_CZK)
 	{
 		$this->orderNumber = $orderNumber;
 		$this->invoiceNumber = $invoiceNumber;
@@ -165,7 +179,16 @@ class ElmsService
 	}
 
 
-	public function addCustomer(string $name, string $surname, string $street, string $city, string $zip, string $country): void
+	/**
+	 * @param string $name
+	 * @param string $surname
+	 * @param string $street
+	 * @param string $city
+	 * @param string $zip
+	 * @param string $country
+	 * @throws ElmsException
+	 */
+	public function addCustomer(string $name, string $surname, string $street, string $city, string $zip, string $country)
 	{
 		if (!$this->checkCountry($country)) {
 			throw new ElmsException('Undefined country code.');
@@ -184,7 +207,14 @@ class ElmsService
 	}
 
 
-	public function addProduct(string $plu, float $price, float $amount, float $vat): void
+	/**
+	 * @param string $plu
+	 * @param float  $price
+	 * @param float  $amount
+	 * @param float  $vat
+	 * @throws ElmsException
+	 */
+	public function addProduct(string $plu, float $price, float $amount, float $vat)
 	{
 		if (abs($price - round($price, 2)) > 0) {
 			throw new ElmsException('Wrong price precision. Only two decimals allowed.');
@@ -199,7 +229,11 @@ class ElmsService
 	}
 
 
-	public function addProducts(array $products): void
+	/**
+	 * @param array $products
+	 * @throws ElmsException
+	 */
+	public function addProducts(array $products)
 	{
 		foreach ($products as $product) {
 			$keys = array_keys($product);
@@ -212,7 +246,13 @@ class ElmsService
 	}
 
 
-	public function addDiscount(float $price, float $amount, float $vat): void
+	/**
+	 * @param float $price
+	 * @param float $amount
+	 * @param float $vat
+	 * @throws ElmsException
+	 */
+	public function addDiscount(float $price, float $amount, float $vat)
 	{
 		if ($price * $amount > 0) {
 			throw new ElmsException('Price or ammount must be negative for discount.');
@@ -221,7 +261,11 @@ class ElmsService
 	}
 
 
-	public function addRounding($value): void
+	/**
+	 * @param float $value
+	 * @throws ElmsException
+	 */
+	public function addRounding(float $value)
 	{
 		if (abs($value) > 0.99) {
 			throw new ElmsException('Rounding value can be between -0.99 to 0.99 only.');
@@ -230,7 +274,12 @@ class ElmsService
 	}
 
 
-	public function setCustomerCompany(string $company, string $ic, string $dic = null): void
+	/**
+	 * @param string      $company
+	 * @param string      $ic
+	 * @param string|null $dic
+	 */
+	public function setCustomerCompany(string $company, string $ic, string $dic = null)
 	{
 		$this->company = $company;
 		$this->ic = $ic;
@@ -238,7 +287,12 @@ class ElmsService
 	}
 
 
-	public function setCustomerContact(?string $email, ?string $phone): void
+	/**
+	 * @param string|null $email
+	 * @param string|null $phone
+	 * @throws ElmsException
+	 */
+	public function setCustomerContact(string $email = null, string $phone = null)
 	{
 		$this->email = $email;
 		$this->phone = $phone;
@@ -249,7 +303,16 @@ class ElmsService
 	}
 
 
-	public function setCustomerDeliveryAddress(string $deliveryName, string $deliverySurname, string $deliveryStreet, string $deliveryCity, string $deliveryZip, string $deliveryCountry): void
+	/**
+	 * @param string $deliveryName
+	 * @param string $deliverySurname
+	 * @param string $deliveryStreet
+	 * @param string $deliveryCity
+	 * @param string $deliveryZip
+	 * @param string $deliveryCountry
+	 * @throws ElmsException
+	 */
+	public function setCustomerDeliveryAddress(string $deliveryName, string $deliverySurname, string $deliveryStreet, string $deliveryCity, string $deliveryZip, string $deliveryCountry)
 	{
 		$this->deliveryName = $deliveryName;
 		$this->deliverySurname = $deliverySurname;
@@ -268,13 +331,21 @@ class ElmsService
 	}
 
 
-	public function setCustomerDeliveryCompany(string $deliveryCompany): void
+	/**
+	 * @param string $deliveryCompany
+	 */
+	public function setCustomerDeliveryCompany(string $deliveryCompany)
 	{
 		$this->deliveryCompany = $deliveryCompany;
 	}
 
 
-	public function setCustomerDeliveryContact(?string $deliveryEmail, ?string $deliveryPhone): void
+	/**
+	 * @param string|null $deliveryEmail
+	 * @param string|null $deliveryPhone
+	 * @throws ElmsException
+	 */
+	public function setCustomerDeliveryContact(string $deliveryEmail = null, string $deliveryPhone = null)
 	{
 		$this->deliveryEmail = $deliveryEmail;
 		$this->deliveryPhone = $deliveryPhone;
@@ -285,14 +356,20 @@ class ElmsService
 	}
 
 
-	public function getTotal(): float
+	/**
+	 * @return float
+	 */
+	public function getTotal()
 	{
 		$this->calculateTotal();
 		return $this->total;
 	}
 
 
-	public function sendOrder(): void
+	/**
+	 *
+	 */
+	public function sendOrder()
 	{
 		$data = $this->exportData();
 		$data = json_encode($data);
@@ -301,7 +378,10 @@ class ElmsService
 	}
 
 
-	private function calculateTotal(): void
+	/**
+	 * @throws ElmsException
+	 */
+	private function calculateTotal()
 	{
 		if (empty($this->products)) {
 			throw new ElmsException('No products defined. Add some product first.');
@@ -325,7 +405,10 @@ class ElmsService
 	}
 
 
-	private function exportData(): array
+	/**
+	 * @return array
+	 */
+	private function exportData()
 	{
 		$this->checkDelivery();
 		$orderDate = new DateTime();
@@ -343,7 +426,10 @@ class ElmsService
 	}
 
 
-	private function checkDelivery(): void
+	/**
+	 * @throws ElmsException
+	 */
+	private function checkDelivery()
 	{
 		$deliveryExists = false;
 		foreach ($this->products as $product) {
@@ -359,7 +445,11 @@ class ElmsService
 	}
 
 
-	private function getCustomer(): array
+	/**
+	 * @return array
+	 * @throws ElmsException
+	 */
+	private function getCustomer()
 	{
 		if (!$this->name || !$this->surname || !$this->street || !$this->city || !$this->country || !$this->zip) {
 			throw new ElmsException('Customer is not set properly.');
@@ -421,13 +511,21 @@ class ElmsService
 	}
 
 
-	private function checkCountry(?string $country): bool
+	/**
+	 * @param string|null $country
+	 * @return bool
+	 */
+	private function checkCountry($country)
 	{
 		return $country === self::COUNTRY_CZE || $country === self::COUNTRY_SVK;
 	}
 
 
-	private function checkZip(?string $zip): bool
+	/**
+	 * @param string|null $zip
+	 * @return bool
+	 */
+	private function checkZip($zip)
 	{
 		if (!$zip) {
 			return true;
@@ -436,7 +534,11 @@ class ElmsService
 	}
 
 
-	private function checkEmail(?string $email): bool
+	/**
+	 * @param string|null $email
+	 * @return bool
+	 */
+	private function checkEmail($email)
 	{
 		if (!$email) {
 			return true;
@@ -445,7 +547,11 @@ class ElmsService
 	}
 
 
-	private function send($data): void
+	/**
+	 * @param array $data
+	 * @throws ElmsException
+	 */
+	private function send(array $data)
 	{
 		if ($this->debugMode) {
 			return; //No data send in debug mode...
