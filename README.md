@@ -56,11 +56,12 @@ You can set another customer properties:
 	:
 ```
 
-or even diferent delivery address. If delivery address is not set, shipping will be provided to customer`s address.
+or even diferent delivery address. You can set any part of delivery address separately. If delivery address is not set, shipping will be provided to customer`s address.
 
 ```
 	:
-	$this->elmsService->setCustomerDeliveryAddress('Jana', 'Nováková', 'Krátká 8', 'Krátká Lhota', '54321', ElmsService::COUNTRY_SVK);
+	$this->elmsService->setCustomerDeliveryName('Jana', 'Nováková');
+	$this->elmsService->setCustomerDeliveryAddress('Krátká 8', 'Krátká Lhota', '54321', ElmsService::COUNTRY_SVK);
 	$this->elmsService->setCustomerDeliveryCompany('Jana Nováková OSVČ');
 	$this->elmsService->setCustomerDeliveryContact('novakova@novakova.sk', '+421777888999');
 	:
@@ -82,16 +83,16 @@ Alternatively, you can set products in bulk:
 	$this->elmsService->addProducts([
 		[
 			'plu' => 'Product PLU',
-		  'price' => 1234.56,
-		  'amount' => 1,
-		  'vat' => 21,
+			'price' => 1234.56,
+			'amount' => 1,
+			'vat' => 21,
 		],
 		[
-		  'plu' => ElmsService::DELIVERY_CPOSTRR,
-		  'price' => 55,
-		  'amount' => 1,
-		  'vat' => 21,
-	  ],
+			'plu' => ElmsService::DELIVERY_CPOSTRR,
+			'price' => 55,
+			'amount' => 1,
+			'vat' => 21,
+		],
 	]);
 	:
 ```

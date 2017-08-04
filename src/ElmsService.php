@@ -306,16 +306,23 @@ class ElmsService
 	/**
 	 * @param string $deliveryName
 	 * @param string $deliverySurname
+	 */
+	public function setCustomerDeliveryName(string $deliveryName, string $deliverySurname)
+	{
+		$this->deliveryName = $deliveryName;
+		$this->deliverySurname = $deliverySurname;
+	}
+
+
+	/**
 	 * @param string $deliveryStreet
 	 * @param string $deliveryCity
 	 * @param string $deliveryZip
 	 * @param string $deliveryCountry
 	 * @throws ElmsException
 	 */
-	public function setCustomerDeliveryAddress(string $deliveryName, string $deliverySurname, string $deliveryStreet, string $deliveryCity, string $deliveryZip, string $deliveryCountry)
+	public function setCustomerDeliveryAddress(string $deliveryStreet, string $deliveryCity, string $deliveryZip, string $deliveryCountry)
 	{
-		$this->deliveryName = $deliveryName;
-		$this->deliverySurname = $deliverySurname;
 		$this->deliveryStreet = $deliveryStreet;
 		$this->deliveryCity = $deliveryCity;
 		$this->deliveryZip = $deliveryZip;
