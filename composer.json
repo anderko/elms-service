@@ -2,7 +2,7 @@
     "name": "premekkoch/elms-service",
     "description": "Nette service for comunication with ELMS distribution service (http://www.elmsservice.cz)",
     "type": "library",
-	"licence": "MIT",
+	"license": ["MIT"],
     "authors": [
         {
             "name": "premekkoch",
@@ -10,10 +10,10 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
-        "nette/application": "~2.4",
-	    "nette/di": "^2.4",
-	    "nette/robot-loader": "^2.4"
+        "php": ">=7.1",
+        "nette/application": "^3.0",
+	    "nette/di": "^3.0",
+	    "nette/robot-loader": "^3.0"
     },
 	"autoload": {
 		"psr-4": { "PremekKoch\\Elms\\": "src/" }
